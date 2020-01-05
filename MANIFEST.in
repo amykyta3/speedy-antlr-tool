@@ -1,0 +1,2 @@
+recursive-include speedy_antlr_tool/templates *
+recursive-exclude test *
