@@ -1,9 +1,11 @@
+[![Documentation Status](https://readthedocs.org/projects/speedy-antlr-tool/badge/?version=latest)](http://speedy-antlr-tool.readthedocs.io)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/speedy-antlr-tool.svg)](https://pypi.org/project/speedy-antlr-tool)
 
 # Speedy Antlr Tool
 
-Running Antlr in Python is slow.
+Running an Antlr parser in Python is slow.
 
-This tool makes it faster by generating a Python extension that runs your parser
-using Antlr's C++ target, and then translating the parsed tree back into Python.
+This tool generates a Python extension that runs your parser using Antlr's C++
+target, and then translates the parsed tree back into Python.
 
-This project is still a work in progress...
+See the [Speedy Antlr Tool Documentation](http://speedy-antlr-tool.readthedocs.io) for more details

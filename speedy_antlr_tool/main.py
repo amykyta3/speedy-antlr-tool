@@ -18,9 +18,9 @@ def write_cpp_files(grammar_name:str, context_data:str, output_dir:str):
     }
 
     # Write out main module source
-    template = jj_env.get_template("sa_X_parser.cpp")
+    template = jj_env.get_template("sa_X_cpp_parser.cpp")
     stream = template.stream(context)
-    output_path = os.path.join(output_dir, "sa_%s_parser.cpp" % grammar_name.lower())
+    output_path = os.path.join(output_dir, "sa_%s_cpp_parser.cpp" % grammar_name.lower())
     stream.dump(output_path)
 
     # Write out translator visitor header
