@@ -3,6 +3,7 @@ import os
 import jinja2 as jj
 
 from .extractor import extract
+from .__about__ import __version__
 
 def write_cpp_files(grammar_name:str, context_data:str, output_dir:str):
     loader = jj.FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates"))
@@ -15,6 +16,7 @@ def write_cpp_files(grammar_name:str, context_data:str, output_dir:str):
     context = {
         "grammar_name": grammar_name,
         "context_data": context_data,
+        "__version__": __version__,
     }
 
     # Write out main module source
@@ -59,6 +61,7 @@ def write_py_files(grammar_name:str, context_data:str, output_dir:str):
     context = {
         "grammar_name": grammar_name,
         "context_data": context_data,
+        "__version__": __version__,
     }
 
     # Write out python file

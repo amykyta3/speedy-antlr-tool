@@ -43,7 +43,10 @@ sa_mygrammar.py
 
 `src/spam/parser/sa_mygrammar.py <https://github.com/amykyta3/speedy-antlr-example/blob/master/src/spam/parser/sa_mygrammar.py>`_
 
-TODO
+This module provides the entry-point for the C++ based parser, as well as a
+pure Python fall-back implementation. When calling the ``parse()`` function,
+the fall-back implementation is automatically used if the C++ version failed to
+install.
 
 
 print_tree.py
@@ -89,7 +92,9 @@ setup.py
 
 `setup.py <https://github.com/amykyta3/speedy-antlr-example/blob/master/setup.py>`_
 
-TODO
+This example setup script shows how to gracefully omit the C++ accelerator if
+it fails to build. Recall from earlier, if the extension is not avialable, the
+``parse()`` wrapper function will automatically choose the Python equivalent.
 
 
 LICENSE-3RD-PARTY
