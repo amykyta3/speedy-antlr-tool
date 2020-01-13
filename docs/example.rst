@@ -8,6 +8,18 @@ Antlr. You can find `the completed example here. <https://github.com/amykyta3/sp
 In this example, a we will put together a fictional Python module called
 ``spam`` that implements an Antlr parser for a grammar called ``MyGrammar``.
 
+
+antlr4-cpp-runtime
+------------------
+
+`src/spam/parser/cpp_src/antlr4-cpp-runtime <https://github.com/amykyta3/speedy-antlr-example/tree/master/src/spam/parser/cpp_src/antlr4-cpp-runtime>`_
+
+This directory contains a copy of Antlr's C++ runtime source. This is required
+for our extension to be built against.
+
+Future releases of the runtime can be downloaded from `Antlr's download page <https://www.antlr.org/download.html>`_
+
+
 generate_parsers.sh
 -------------------
 
