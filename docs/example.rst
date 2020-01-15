@@ -117,3 +117,23 @@ LICENSE-3RD-PARTY
 Since you'll be bundling the Antlr C++ runtime in your package's distribution
 (source and binary), be a good steward of open-source software and include a
 copy of Antlr's BSD license.
+
+.travis.yml
+-----------
+
+`.travis.yml <https://github.com/amykyta3/speedy-antlr-example/blob/master/.travis.yml>`_
+
+If you've attempted to install this example by now, you've probably noticed that
+it takes a *looong* time. This is because all the C++ files (antlr has many)
+are getting compiled.
+
+If you plan to publish your package to PyPi, it is good practice to also publish
+binary distributions. This eliminates the need for the end-user to install a
+compiler and build everything from source.
+
+Since you probably dont have access to every variant of Windows/Linux/macOS,
+this is typically done using a continuous integration service like
+`Travis-CI <https://travis-ci.org>`_. This YAML file tells Tracis-CI how to
+run your project's tests, and how to deploy to PyPi. I'm also using
+`cibuildwheel <https://github.com/joerick/cibuildwheel>`_ to automate building
+all the different distribution variants.
