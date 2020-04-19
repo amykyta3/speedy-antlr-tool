@@ -133,7 +133,7 @@ compiler and build everything from source.
 
 Since you probably dont have access to every variant of Windows/Linux/macOS,
 this is typically done using a continuous integration service like
-`Travis-CI <https://travis-ci.org>`_. This YAML file tells Tracis-CI how to
+`Travis-CI <https://travis-ci.org>`_. This YAML file tells Travis-CI how to
 run your project's tests, and how to deploy to PyPi. I'm also using
 `cibuildwheel <https://github.com/joerick/cibuildwheel>`_ to automate building
 all the different distribution variants.
