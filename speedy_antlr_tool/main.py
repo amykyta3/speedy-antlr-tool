@@ -5,7 +5,7 @@ import jinja2 as jj
 from .extractor import extract
 from .__about__ import __version__
 
-def write_cpp_files(grammar_name:str, context_data:str, output_dir:str):
+def write_cpp_files(grammar_name:str, parser_basename:str, context_data:str, output_dir:str):
     loader = jj.FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates"))
 
     jj_env = jj.Environment(
@@ -15,6 +15,7 @@ def write_cpp_files(grammar_name:str, context_data:str, output_dir:str):
 
     context = {
         "grammar_name": grammar_name,
+        "parser_basename": parser_basename,
         "context_data": context_data,
         "__version__": __version__,
     }
@@ -50,7 +51,7 @@ def write_cpp_files(grammar_name:str, context_data:str, output_dir:str):
     stream.dump(output_path)
 
 
-def write_py_files(grammar_name:str, context_data:str, output_dir:str):
+def write_py_files(grammar_name:str, parser_basename:str, context_data:str, output_dir:str):
     loader = jj.FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates"))
 
     jj_env = jj.Environment(
@@ -60,6 +61,7 @@ def write_py_files(grammar_name:str, context_data:str, output_dir:str):
 
     context = {
         "grammar_name": grammar_name,
+        "parser_basename": parser_basename,
         "context_data": context_data,
         "__version__": __version__,
     }
@@ -83,8 +85,8 @@ def generate(py_parser_path:str, cpp_output_dir:str):
     py_output_dir = os.path.dirname(py_parser_path)
 
     # Parse the Parser.py file and extract context data
-    context_data = extract(py_parser_path)
+    context_data, parser_basename = extract(py_parser_path)
 
     # Write out files
-    write_py_files(grammar_name, context_data, py_output_dir)
-    write_cpp_files(grammar_name, context_data, cpp_output_dir)
+    write_py_files(grammar_name, parser_basename, context_data, py_output_dir)
+    write_cpp_files(grammar_name, parser_basename, context_data, cpp_output_dir)

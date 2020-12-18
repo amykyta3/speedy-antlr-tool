@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include "{{grammar_name}}BaseVisitor.h"
+#include "{{parser_basename}}BaseVisitor.h"
 #include "speedy_antlr.h"
 
-class SA_{{grammar_name}}Translator : public {{grammar_name}}BaseVisitor {
+class SA_{{grammar_name}}Translator : public {{parser_basename}}BaseVisitor {
     speedy_antlr::Translator *translator;
 
     // Cached context classes

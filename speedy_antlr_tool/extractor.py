@@ -1,4 +1,5 @@
 import re
+import os
 import importlib.util
 from typing import List
 
@@ -32,7 +33,7 @@ def iter_rule_context_classes(parser_cls:antlr4.Parser):
         # Detect ParserRuleContext classes
         if not (isinstance(obj, type) and issubclass(obj, antlr4.ParserRuleContext)):
             continue
-            
+
         yield obj
 
 
@@ -83,8 +84,10 @@ def get_context_data(context_cls:antlr4.ParserRuleContext) -> ContextData:
 def extract(parser_path:str) -> List[ContextData]:
     parser_cls = get_parser_class(parser_path)
 
+    parser_basename = os.path.splitext(os.path.basename(parser_cls.grammarFileName))[0]
+
     cds = []
     for context_cls in iter_rule_context_classes(parser_cls):
         cds.append(get_context_data(context_cls))
-    
-    return cds
+
+    return cds, parser_basename

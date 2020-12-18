@@ -49,6 +49,10 @@ You'll notice this last step generates the following files:
 * cpp_src/sa_mygrammar_translator.cpp/.h
 * cpp_src/speedy_antlr.cpp/.h
 
+.. note::
+    If your language grammar is split into separate Lexer and Parser files, see
+    the alternate `src/spam/parser/generate_parsers_split.sh <https://github.com/amykyta3/speedy-antlr-example/blob/master/src/spam/parser/generate_parsers_split.sh>`_
+    example script.
 
 sa_mygrammar.py
 ---------------
@@ -118,10 +122,10 @@ Since you'll be bundling the Antlr C++ runtime in your package's distribution
 (source and binary), be a good steward of open-source software and include a
 copy of Antlr's BSD license.
 
-.travis.yml
------------
+.github/workflows/build.yml
+---------------------------
 
-`.travis.yml <https://github.com/amykyta3/speedy-antlr-example/blob/master/.travis.yml>`_
+`.github/workflows/build.yml <https://github.com/amykyta3/speedy-antlr-example/blob/master/.github/workflows/build.yml>`_
 
 If you've attempted to install this example by now, you've probably noticed that
 it takes a *looong* time. This is because all the C++ files (antlr has many)
@@ -132,8 +136,8 @@ binary distributions. This eliminates the need for the end-user to install a
 compiler and build everything from source.
 
 Since you probably dont have access to every variant of Windows/Linux/macOS,
-this is typically done using a continuous integration service like
-`Travis-CI <https://travis-ci.org>`_. This YAML file tells Travis-CI how to
-run your project's tests, and how to deploy to PyPi. I'm also using
+this is typically done using a continuous integration service like Github
+Actions. This YAML file tells Github Actions how to run your project's tests,
+and how to deploy to PyPi. I'm also using
 `cibuildwheel <https://github.com/joerick/cibuildwheel>`_ to automate building
 all the different distribution variants.
