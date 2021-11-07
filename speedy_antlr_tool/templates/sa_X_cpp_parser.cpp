@@ -92,7 +92,7 @@ PyObject* do_parse(PyObject *self, PyObject *args) {
 
         // Translate Parse tree to Python
         SA_{{grammar_name}}Translator visitor(&translator);
-        result = visitor.visit(parse_tree);
+        result = visitor.visit(parse_tree).as<PyObject *>();
 
         // Clean up data
         Py_XDECREF(token_module);
@@ -150,4 +150,3 @@ PyInit_sa_{{grammar_name|lower}}_cpp_parser(void) {
     PyObject *m = PyModule_Create(&module);
     return m;
 }
-

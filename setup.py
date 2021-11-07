@@ -24,7 +24,7 @@ setuptools.setup(
     include_package_data=True,
     python_requires='>=3.4',
     install_requires=[
-        "antlr4-python3-runtime",
+        "antlr4-python3-runtime >= 4.9.3",
         "jinja2",
     ],
     classifiers=(
@@ -36,6 +36,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3 :: Only",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
