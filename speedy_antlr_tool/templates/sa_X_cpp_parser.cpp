@@ -16,7 +16,7 @@
 #include "sa_{{grammar_name|lower}}_translator.h"
 
 {%- for rule_name in entry_rule_names %}
-antlr4::tree::ParseTree* get_parse_tree_{{rule_name}}(SystemRDLParser *parser) {return parser->{{rule_name}}();}
+antlr4::tree::ParseTree* get_parse_tree_{{rule_name}}({{grammar_name}}Parser *parser) {return parser->{{rule_name}}();}
 {%- endfor %}
 
 antlr4::tree::ParseTree* get_parse_tree({{grammar_name}}Parser *parser, const char *entry_rule_name) {
