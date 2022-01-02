@@ -40,7 +40,16 @@ generate the accelerator files.
 
 .. literalinclude:: speedy-antlr-example/src/spam/parser/generate_parsers.sh
     :language: bash
-    :lines: 12-20
+    :lines: 12-21
+
+.. note::
+
+    The optional ``entry_rule_names`` option allows you to provide a reduced list of
+    parse tree entry points. This is a list of context names the parser will support
+    when calling the ``parse()`` function from Python. Providing a reduced list
+    can simplify the output and remove unnecessary code from the parse accelerator.
+
+    If this option is omitted, support for all entry rules is generated.
 
 You'll notice this last step generates the following files:
 
@@ -109,7 +118,7 @@ setup.py
 `setup.py <https://github.com/amykyta3/speedy-antlr-example/blob/master/setup.py>`_
 
 This example setup script shows how to gracefully omit the C++ accelerator if
-it fails to build. Recall from earlier, if the extension is not avialable, the
+it fails to build. Recall from earlier, if the extension is not available, the
 ``parse()`` wrapper function will automatically choose the Python equivalent.
 
 
@@ -135,7 +144,7 @@ If you plan to publish your package to PyPi, it is good practice to also publish
 binary distributions. This eliminates the need for the end-user to install a
 compiler and build everything from source.
 
-Since you probably dont have access to every variant of Windows/Linux/macOS,
+Since you probably don't have access to every variant of Windows/Linux/macOS,
 this is typically done using a continuous integration service like Github
 Actions. This YAML file tells Github Actions how to run your project's tests,
 and how to deploy to PyPi. I'm also using
