@@ -15,6 +15,28 @@
 
 #include "sa_{{grammar_name|lower}}_translator.h"
 
+{%- for rule_name in entry_rule_names %}
+antlr4::tree::ParseTree* get_parse_tree_{{rule_name}}(SystemRDLParser *parser) {return parser->{{rule_name}}();}
+{%- endfor %}
+
+antlr4::tree::ParseTree* get_parse_tree({{grammar_name}}Parser *parser, const char *entry_rule_name) {
+    static std::map<std::string, antlr4::tree::ParseTree* (*)({{grammar_name}}Parser*)> table
+    {
+{%- for rule_name in entry_rule_names %}
+        {"{{rule_name}}", &get_parse_tree_{{rule_name}}}
+        {%- if not loop.last %},{% endif %}
+{%- endfor %}
+    };
+
+    auto entry = table.find(entry_rule_name);
+    if (entry != table.end()) {
+        return (*(entry->second))(parser);
+    } else {
+        PyErr_SetString(PyExc_ValueError, "Invalid entry_rule_name");
+        throw speedy_antlr::PythonException();
+    }
+}
+
 /*
  * Python function prototype:
  *  do_parse(
@@ -75,20 +97,7 @@ PyObject* do_parse(PyObject *self, PyObject *args) {
             parser.addErrorListener(&err_listener);
         }
         antlr4::tree::ParseTree *parse_tree;
-
-{%- for d in context_data if not d.is_label_ctx %}
-    {%- if loop.first %}
-        if
-    {%- else %}
-        } else if
-    {%- endif -%}
-        (!strcmp(entry_rule_name, "{{d.rule_name}}")){
-            parse_tree = parser.{{d.rule_name}}();
-{% endfor %}
-        } else {
-            PyErr_SetString(PyExc_ValueError, "Invalid entry_rule_name");
-            throw speedy_antlr::PythonException();
-        }
+        parse_tree = get_parse_tree(&parser, entry_rule_name);
 
         // Translate Parse tree to Python
         SA_{{grammar_name}}Translator visitor(&translator);
