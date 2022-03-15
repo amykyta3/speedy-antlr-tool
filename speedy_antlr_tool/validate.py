@@ -14,25 +14,32 @@ def validate_top_ctx(py_ctx:ParserRuleContext, cpp_ctx:ParserRuleContext):
 
 def validate_ctx(py_ctx:ParserRuleContext, cpp_ctx:ParserRuleContext):
     assert type(py_ctx) == type(cpp_ctx)
-    assert len(py_ctx.children) == len(cpp_ctx.children)
+    pc = list(py_ctx.getChildren())
+    cc = list(cpp_ctx.getChildren())
+    assert len(pc) == len(cc)
 
     # Validate children
-    for i in range(len(py_ctx.children)):
-        if isinstance(py_ctx.children[i], TerminalNodeImpl):
-            validate_tnode(py_ctx.children[i], cpp_ctx.children[i])
-        elif isinstance(py_ctx.children[i], ParserRuleContext):
-            validate_ctx(py_ctx.children[i], cpp_ctx.children[i])
+    for i in range(len(pc)):
+        if isinstance(pc[i], TerminalNodeImpl):
+            validate_tnode(pc[i], cc[i])
+        elif isinstance(pc[i], ParserRuleContext):
+            validate_ctx(pc[i], cc[i])
         else:
             raise RuntimeError
-        assert py_ctx.children[i].parentCtx is py_ctx
-        assert cpp_ctx.children[i].parentCtx is cpp_ctx
+        assert pc[i].parentCtx is py_ctx
+        assert cc[i].parentCtx is cpp_ctx
     
     # Validate start/stop markers
     validate_common_token(py_ctx.start, cpp_ctx.start)
-    validate_common_token(py_ctx.stop, cpp_ctx.stop)
+    if cpp_ctx.start is not None:
+        # When start is None, this ctx is empty, C++ may have
+        # a different stop (None), but it doesn't matter
+        validate_common_token(py_ctx.stop, cpp_ctx.stop)
 
     # Validate labels
     for label in get_rule_labels(py_ctx):
+        if label.startswith("_"):
+            continue
         py_label = getattr(py_ctx, label)
         cpp_label = getattr(cpp_ctx, label)
         assert type(py_label) == type(cpp_label)
@@ -53,6 +60,10 @@ def validate_tnode(py_tnode:TerminalNodeImpl, cpp_tnode:TerminalNodeImpl):
 
 
 def validate_common_token(py_tok:CommonToken, cpp_tok:CommonToken):
+    if cpp_tok is None and py_tok is not None:
+        # EOF in py_tok, cpp_tok can be None it is OK
+        assert py_tok.start > py_tok.stop
+        return
     assert type(py_tok) == type(cpp_tok)
     if py_tok is None:
         return
