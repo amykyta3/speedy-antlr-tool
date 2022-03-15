@@ -172,6 +172,7 @@ PyObject* Translator::convert_ctx(
             } catch(PythonException &e) {
                 Py_XDECREF(py_ctx);
                 Py_XDECREF(py_children);
+                throw;
             }
             PyObject_SetAttrString(py_child, "parentCtx", py_ctx);
             py_label_candidate = py_child;
