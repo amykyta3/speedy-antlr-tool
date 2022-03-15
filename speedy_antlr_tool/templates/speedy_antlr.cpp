@@ -181,9 +181,8 @@ PyObject* Translator::convert_ctx(
             if(i == 0) {
                 start = PyObject_GetAttrString(py_child, "start");
             }
-            if(i == ctx->children.size() - 1){
-                stop = PyObject_GetAttrString(py_child, "stop");
-            }
+            PyObject *tmp_stop = PyObject_GetAttrString(py_child, "stop");
+            if (tmp_stop && tmp_stop!=Py_None) stop = tmp_stop
         } else {
             PyErr_SetString(PyExc_RuntimeError, "Unknown child type");
             throw PythonException();

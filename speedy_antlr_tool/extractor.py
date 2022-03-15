@@ -53,7 +53,7 @@ def get_rule_labels(context_cls:antlr4.ParserRuleContext) -> List[str]:
     labels = []
     for line in lines:
         m = re.match(r'self\.(\w+)\s*=\s*None', line.strip())
-        if m:
+        if m and not m.group(1).startswith("_"):
             labels.append(m.group(1))
 
     return labels
