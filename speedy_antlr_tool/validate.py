@@ -1,7 +1,7 @@
 import re
 import inspect
 
-from antlr4 import ParserRuleContext
+from antlr4 import InputStream, ParserRuleContext
 from antlr4.tree.Tree import TerminalNodeImpl
 from antlr4.Token import Token, CommonToken
 
@@ -75,4 +75,4 @@ def validate_common_token(py_tok:CommonToken, cpp_tok:CommonToken):
     assert py_tok.line == cpp_tok.line
     assert py_tok.column == cpp_tok.column
     assert py_tok.text == cpp_tok.text
-    assert py_tok.getInputStream() is cpp_tok.getInputStream()
+    assert isinstance(cpp_tok.getInputStream(), InputStream)
