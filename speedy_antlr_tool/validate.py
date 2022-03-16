@@ -30,10 +30,12 @@ def validate_ctx(py_ctx:ParserRuleContext, cpp_ctx:ParserRuleContext):
         assert cc[i].parentCtx is cpp_ctx
     
     # Validate start/stop markers
-    validate_common_token(py_ctx.start, cpp_ctx.start)
-    if cpp_ctx.start is not None:
-        # When start is None, this ctx is empty, C++ may have
-        # a different stop (None), but it doesn't matter
+    if (py_ctx.start is not None 
+        and py_ctx.stop is not None
+        and py_ctx.start.type != Token.EOF
+        and py_ctx.stop.type != Token.EOF
+        and py_ctx.start.tokenIndex <= py_ctx.stop.tokenIndex):
+        validate_common_token(py_ctx.start, cpp_ctx.start)
         validate_common_token(py_ctx.stop, cpp_ctx.stop)
 
     # Validate labels
@@ -60,10 +62,6 @@ def validate_tnode(py_tnode:TerminalNodeImpl, cpp_tnode:TerminalNodeImpl):
 
 
 def validate_common_token(py_tok:CommonToken, cpp_tok:CommonToken):
-    if cpp_tok is None and py_tok is not None:
-        # EOF in py_tok, cpp_tok can be None it is OK
-        assert py_tok.start > py_tok.stop
-        return
     assert type(py_tok) == type(cpp_tok)
     if py_tok is None:
         return
