@@ -155,7 +155,7 @@ PyObject* Translator::convert_ctx(
             Py_INCREF(py_label_candidate);
 
             // Get start/stop
-            if(!start){
+            if(!start || start==Py_None){
                 start = py_token;
                 Py_INCREF(start);
             }
@@ -179,7 +179,7 @@ PyObject* Translator::convert_ctx(
             Py_INCREF(py_label_candidate);
 
             // Get start/stop
-            if(i == 0) {
+            if(!start || start==Py_None) {
                 start = PyObject_GetAttrString(py_child, "start");
             }
             PyObject *tmp_stop = PyObject_GetAttrString(py_child, "stop");
