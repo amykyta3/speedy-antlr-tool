@@ -7,6 +7,7 @@
 #include <Python.h>
 
 #include <cstring>
+#include <any>
 
 #include "antlr4-runtime.h"
 #include "{{grammar_name}}Lexer.h"
@@ -101,7 +102,7 @@ PyObject* do_parse(PyObject *self, PyObject *args) {
 
         // Translate Parse tree to Python
         SA_{{grammar_name}}Translator visitor(&translator);
-        result = visitor.visit(parse_tree).as<PyObject *>();
+        result = std::any_cast<PyObject *>(visitor.visit(parse_tree));
 
         // Clean up data
         Py_XDECREF(token_module);
