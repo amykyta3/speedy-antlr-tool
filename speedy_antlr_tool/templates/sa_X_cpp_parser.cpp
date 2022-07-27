@@ -7,6 +7,7 @@
 #include <Python.h>
 
 #include <cstring>
+#include <any>
 
 #include "antlr4-runtime.h"
 #include "{{grammar_name}}Lexer.h"

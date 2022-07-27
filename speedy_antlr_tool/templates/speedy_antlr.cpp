@@ -4,6 +4,7 @@
  */
 
 #include "speedy_antlr.h"
+#include <any>
 
 using namespace speedy_antlr;
 
@@ -155,7 +156,7 @@ PyObject* Translator::convert_ctx(
             Py_INCREF(py_label_candidate);
 
             // Get start/stop
-            if(!start){
+            if(!start || start==Py_None){
                 start = py_token;
                 Py_INCREF(start);
             }
@@ -172,18 +173,18 @@ PyObject* Translator::convert_ctx(
             } catch(PythonException &e) {
                 Py_XDECREF(py_ctx);
                 Py_XDECREF(py_children);
+                throw;
             }
             PyObject_SetAttrString(py_child, "parentCtx", py_ctx);
             py_label_candidate = py_child;
             Py_INCREF(py_label_candidate);
 
             // Get start/stop
-            if(i == 0) {
+            if(!start || start==Py_None) {
                 start = PyObject_GetAttrString(py_child, "start");
             }
-            if(i == ctx->children.size() - 1){
-                stop = PyObject_GetAttrString(py_child, "stop");
-            }
+            PyObject *tmp_stop = PyObject_GetAttrString(py_child, "stop");
+            if (tmp_stop && tmp_stop!=Py_None) stop = tmp_stop;
         } else {
             PyErr_SetString(PyExc_RuntimeError, "Unknown child type");
             throw PythonException();

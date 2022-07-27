@@ -1,7 +1,7 @@
 import re
 import inspect
 
-from antlr4 import ParserRuleContext
+from antlr4 import InputStream, ParserRuleContext
 from antlr4.tree.Tree import TerminalNodeImpl
 from antlr4.Token import Token, CommonToken
 
@@ -14,25 +14,34 @@ def validate_top_ctx(py_ctx:ParserRuleContext, cpp_ctx:ParserRuleContext):
 
 def validate_ctx(py_ctx:ParserRuleContext, cpp_ctx:ParserRuleContext):
     assert type(py_ctx) == type(cpp_ctx)
-    assert len(py_ctx.children) == len(cpp_ctx.children)
+    pc = list(py_ctx.getChildren())
+    cc = list(cpp_ctx.getChildren())
+    assert len(pc) == len(cc)
 
     # Validate children
-    for i in range(len(py_ctx.children)):
-        if isinstance(py_ctx.children[i], TerminalNodeImpl):
-            validate_tnode(py_ctx.children[i], cpp_ctx.children[i])
-        elif isinstance(py_ctx.children[i], ParserRuleContext):
-            validate_ctx(py_ctx.children[i], cpp_ctx.children[i])
+    for i in range(len(pc)):
+        if isinstance(pc[i], TerminalNodeImpl):
+            validate_tnode(pc[i], cc[i])
+        elif isinstance(pc[i], ParserRuleContext):
+            validate_ctx(pc[i], cc[i])
         else:
             raise RuntimeError
-        assert py_ctx.children[i].parentCtx is py_ctx
-        assert cpp_ctx.children[i].parentCtx is cpp_ctx
+        assert pc[i].parentCtx is py_ctx
+        assert cc[i].parentCtx is cpp_ctx
     
     # Validate start/stop markers
-    validate_common_token(py_ctx.start, cpp_ctx.start)
-    validate_common_token(py_ctx.stop, cpp_ctx.stop)
+    if (py_ctx.start is not None 
+        and py_ctx.stop is not None
+        and py_ctx.start.type != Token.EOF
+        and py_ctx.stop.type != Token.EOF
+        and py_ctx.start.tokenIndex <= py_ctx.stop.tokenIndex):
+        validate_common_token(py_ctx.start, cpp_ctx.start)
+        validate_common_token(py_ctx.stop, cpp_ctx.stop)
 
     # Validate labels
     for label in get_rule_labels(py_ctx):
+        if label.startswith("_"):
+            continue
         py_label = getattr(py_ctx, label)
         cpp_label = getattr(cpp_ctx, label)
         assert type(py_label) == type(cpp_label)
@@ -64,4 +73,4 @@ def validate_common_token(py_tok:CommonToken, cpp_tok:CommonToken):
     assert py_tok.line == cpp_tok.line
     assert py_tok.column == cpp_tok.column
     assert py_tok.text == cpp_tok.text
-    assert py_tok.getInputStream() is cpp_tok.getInputStream()
+    assert isinstance(cpp_tok.getInputStream(), InputStream)
