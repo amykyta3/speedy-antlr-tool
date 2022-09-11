@@ -24,7 +24,7 @@ setuptools.setup(
     include_package_data=True,
     python_requires='>=3.6',
     install_requires=[
-        "antlr4-python3-runtime >= 4.10, < 4.11",
+        "antlr4-python3-runtime >= 4.10, < 4.12",
         "jinja2",
     ],
     classifiers=(
