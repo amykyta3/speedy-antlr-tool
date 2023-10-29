@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "speedy-antlr-tool"
+dynamic = ["version"]
+requires-python = ">=3.6"
+dependencies = [
+    "antlr4-python3-runtime >= 4.10, < 4.14",
+    "jinja2",
+]
+
+authors = [
+    {name="Alex Mykyta"},
+]
+description = "Generate an accelerator extension that makes your Antlr parser in Python super-fast!"
+readme = "README.md"
+license = {file = "LICENSE"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3 :: Only",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Compilers",
+    "Topic :: Software Development :: Code Generators",
+]
+
+[project.urls]
+Source = "https://github.com/amykyta3/speedy-antlr-tool"
+Tracker = "https://github.com/amykyta3/speedy-antlr-tool/issues"
+Changelog = "https://github.com/amykyta3/speedy-antlr-tool/releases"
+Documentation = "http://speedy-antlr-tool.readthedocs.io"
+
+[tool.setuptools.dynamic]
+version = {attr = "speedy_antlr_tool.__about__.__version__"}
