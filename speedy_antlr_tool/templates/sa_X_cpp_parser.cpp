@@ -66,11 +66,18 @@ PyObject* do_parse(PyObject *self, PyObject *args) {
         }
 
         // Extract input stream's string
-        const char *cstrdata;
+        char *cstrdata;
         Py_ssize_t bufsize;
         strdata = PyObject_GetAttrString(stream, "strdata");
         if(!strdata) throw speedy_antlr::PythonException();
-        cstrdata = PyUnicode_AsUTF8AndSize(strdata, &bufsize);
+
+        // PyUnicode_AsUTF8AndSize is not part of the stable ABI until python3.10
+        // To maximize backwards compatibility, Working around by converting to
+        // bytes, then to char instead
+        PyObject *strdata_as_bytes;
+        strdata_as_bytes = PyCodec_Encode(strdata, "utf-8", NULL);
+        if(!strdata_as_bytes) throw speedy_antlr::PythonException();
+        PyBytes_AsStringAndSize(strdata_as_bytes, &cstrdata, &bufsize);
         if(!cstrdata) throw speedy_antlr::PythonException();
 
         // Create an antlr InputStream object
@@ -106,6 +113,7 @@ PyObject* do_parse(PyObject *self, PyObject *args) {
 
         // Clean up data
         Py_XDECREF(token_module);
+        Py_XDECREF(strdata_as_bytes);
         Py_XDECREF(strdata);
 
         return result;
