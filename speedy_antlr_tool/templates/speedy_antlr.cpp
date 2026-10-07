@@ -147,6 +147,8 @@ PyObject* Translator::convert_ctx(
                 py_child = tnode_from_token(py_token, py_ctx);
             } catch(PythonException &e) {
                 Py_XDECREF(py_token);
+                Py_XDECREF(start);
+                Py_XDECREF(stop);
                 Py_XDECREF(py_ctx);
                 Py_XDECREF(py_children);
                 throw;
@@ -157,6 +159,7 @@ PyObject* Translator::convert_ctx(
 
             // Get start/stop
             if(!start || start==Py_None){
+                Py_XDECREF(start);
                 start = py_token;
                 Py_INCREF(start);
             }
@@ -175,6 +178,8 @@ PyObject* Translator::convert_ctx(
             try {
                 result = visitor->visit(ctx->children[i]);
             } catch(PythonException &e) {
+                Py_XDECREF(start);
+                Py_XDECREF(stop);
                 Py_XDECREF(py_ctx);
                 Py_XDECREF(py_children);
                 throw;
@@ -208,6 +213,10 @@ PyObject* Translator::convert_ctx(
                 if(!tmp_stop) PyErr_Clear();
             }
         } else {
+            Py_XDECREF(start);
+            Py_XDECREF(stop);
+            Py_XDECREF(py_ctx);
+            Py_XDECREF(py_children);
             PyErr_SetString(PyExc_RuntimeError, "Unknown child type");
             throw PythonException();
         }
