@@ -161,7 +161,10 @@ PyObject* Translator::convert_ctx(
                 Py_INCREF(start);
             }
             if(token->getType() != antlr4::IntStream::EOF) {
-                // Always set stop to current token
+                // Always set stop to current token.
+                // Release the reference held from the previous iteration first,
+                // otherwise every token but the last one leaks a reference.
+                Py_XDECREF(stop);
                 stop = py_token;
                 Py_INCREF(stop);
             }
@@ -189,10 +192,21 @@ PyObject* Translator::convert_ctx(
 
             // Get start/stop
             if(!start || start==Py_None) {
+                // start may already own a reference (to None)
+                Py_XDECREF(start);
                 start = PyObject_GetAttrString(py_child, "start");
+                if(!start) PyErr_Clear();
             }
+            // PyObject_GetAttrString returns a new reference, so the previous
+            // stop must be released, and an unused result must not be leaked.
             PyObject *tmp_stop = PyObject_GetAttrString(py_child, "stop");
-            if (tmp_stop && tmp_stop!=Py_None) stop = tmp_stop;
+            if (tmp_stop && tmp_stop!=Py_None) {
+                Py_XDECREF(stop);
+                stop = tmp_stop;
+            } else {
+                Py_XDECREF(tmp_stop);
+                if(!tmp_stop) PyErr_Clear();
+            }
         } else {
             PyErr_SetString(PyExc_RuntimeError, "Unknown child type");
             throw PythonException();
