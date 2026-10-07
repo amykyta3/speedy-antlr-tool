@@ -186,10 +186,14 @@ PyObject* Translator::convert_ctx(
             }
 
             if(!result.has_value()) {
-                py_child = Py_None;
-            } else {
-                py_child = std::any_cast<PyObject *>(result);
+                Py_XDECREF(start);
+                Py_XDECREF(stop);
+                Py_XDECREF(py_ctx);
+                Py_XDECREF(py_children);
+                PyErr_SetString(PyExc_RuntimeError, "Visitor did not return a translated context");
+                throw PythonException();
             }
+            py_child = std::any_cast<PyObject *>(result);
 
             PyObject_SetAttrString(py_child, "parentCtx", py_ctx);
             py_label_candidate = py_child;
